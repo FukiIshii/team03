@@ -6,6 +6,8 @@
 篠崎心寧
 小林優弥
 
+https://ehimeuniv-my.sharepoint.com/:x:/g/personal/m520391m_mails_cc_ehime-u_ac_jp/IQA58je04JExT70m3A0aMBuFAarYLij7ybaHDP4hg0GSw6o?e=iJQCT3
+
 # 就職活動支援アプリ 要件定義書
 
 ## 1. システム概要
