@@ -1,10 +1,15 @@
 CompanyRepository repository;
-
+ScreenCompanyList screenList;
+ScreenAddEdit screenAddEdit;
+PFont jpFont;
+int currentScreen = 2;
+//サンプルコードです。好きなように編集してください！
 void setup() {
   size(1200, 800);
+  jpFont = createFont("Meiryo", 32, true);
+  textFont(jpFont);
   repository = new CompanyRepository();
 
-  // サンプルデータ（みんなが自分の画面をテストするためのダミー）好きなように編集してください
   Company c1 = new Company("〇〇株式会社");
   c1.esDeadline = "2026/07/15";
   c1.selectionStatus = "選考中";
@@ -19,11 +24,21 @@ void setup() {
   c3.selectionStatus = "不合格";
   repository.add(c3);
 
-  // 動作確認
-  println("登録件数: " + repository.getAll().size()); // 3 と出ればOK
-  println(repository.searchByName("商事").size());     // 1 と出ればOK
+  screenList = new ScreenCompanyList(repository);
+  
+  screenAddEdit = new ScreenAddEdit(repository);
+}
+
+void mousePressed() {
+  if (currentScreen == 2) {
+    screenList.handleInput();
+  }
 }
 
 void draw() {
-  background(255);
+  if (currentScreen == 2) {
+    screenList.display();
+  } else if (currentScreen == 3) {
+    screenAddEdit.display();
+  }
 }
