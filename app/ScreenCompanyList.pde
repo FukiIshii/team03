@@ -1,9 +1,12 @@
 class ScreenCompanyList {
   CompanyRepository repository;
   String searchKeyword = "";
+  String searchValue = "";
+  boolean searchActive = false;
   ArrayList<Company> displayedCompanies;
   Company selectedCompany;
 
+  float searchX = 40, searchY = 80, searchW = 380, searchH = 36;
   float addBtnX = 860, addBtnY = 40, addBtnW = 200, addBtnH = 40;
   float tableStartY = 210, rowHeight = 50;
   float editBtnX = 780, deleteBtnX = 860, actionBtnW = 70, actionBtnH = 26;
@@ -18,6 +21,14 @@ class ScreenCompanyList {
     fill(60);
     textSize(22);
     text("企業一覧", 40, 50);
+
+    noFill();
+    stroke(searchActive ? color(159, 174, 234) : color(220));
+    rect(searchX, searchY, searchW, searchH, 18);
+    noStroke();
+    fill(searchValue.equals("") ? color(180) : color(60));
+    textSize(12);
+    text(searchValue.equals("") ? "企業名で検索" : searchValue, searchX + 15, searchY + 23);
 
     fill(90, 160, 130);
     rect(addBtnX, addBtnY, addBtnW, addBtnH, 18);
@@ -64,9 +75,16 @@ class ScreenCompanyList {
 
       y += rowHeight;
     }
+    
+    if (displayedCompanies.size() == 0) {
+      fill(180);
+      textSize(13);
+      text("該当する企業が見つかりません", 40, tableStartY + 20);
+    }
   }
 
   void handleInput() {
+    searchActive = isInside(mouseX, mouseY, searchX, searchY, searchW, searchH);
     if (isInside(mouseX, mouseY, addBtnX, addBtnY, addBtnW, addBtnH)) {
       onClickAddNew();
       return; 
@@ -88,6 +106,24 @@ class ScreenCompanyList {
     }
   }
 
+  void handleKeyInput(char k) {
+    if (!searchActive) return;
+    if (k == BACKSPACE) {
+      if (searchValue.length() > 0) searchValue = searchValue.substring(0, searchValue.length() - 1);
+    } else if (k != ENTER && k != RETURN && k != CODED && k >= 32 && k != 127) {
+      searchValue += k;
+    }
+    handleSearchInput();
+  }
+
+  void handleSearchInput() {
+    if (searchValue.equals("")) {
+      displayedCompanies = repository.getAll();
+    } else {
+      displayedCompanies = repository.searchByName(searchValue);
+    }
+  }
+
   boolean isInside(float px, float py, float x, float y, float w, float h) {
     return px > x && px < x + w && py > y && py < y + h;
   }
@@ -104,9 +140,8 @@ class ScreenCompanyList {
   }
 
   void onClickDelete(Company c) {
-    println("削除: " + c.companyName);
     repository.remove(c);
-    displayedCompanies = repository.getAll(); 
+    handleSearchInput(); 
   }
 
   color statusColor(String status) {

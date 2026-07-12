@@ -53,7 +53,7 @@ class InputField {
       if (value.length() > 0) value = value.substring(0, value.length() - 1);
     } else if (k == ENTER || k == RETURN) {
       isActive = false; // Enterで確定してフォーカスを外す
-    } else if (k != CODED) {
+    } else if (k != CODED && k >= 32 && k != 127) {
       value += k;
     }
   }

@@ -30,7 +30,9 @@ void setup() {
 }
 
 void keyPressed() {
-  if (currentScreen == 3) {
+  if (currentScreen == 2) {
+    screenList.handleKeyInput(key);
+  } else if (currentScreen == 3) {
     screenAddEdit.handleKeyInput(key);
   }
 }
