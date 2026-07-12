@@ -29,9 +29,17 @@ void setup() {
   screenAddEdit = new ScreenAddEdit(repository);
 }
 
+void keyPressed() {
+  if (currentScreen == 3) {
+    screenAddEdit.handleKeyInput(key);
+  }
+}
+
 void mousePressed() {
   if (currentScreen == 2) {
     screenList.handleInput();
+  }else if (currentScreen == 3) {
+    screenAddEdit.handleInput();
   }
 }
 

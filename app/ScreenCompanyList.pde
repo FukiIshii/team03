@@ -93,12 +93,12 @@ class ScreenCompanyList {
   }
 
   void onClickAddNew() {
-    println("新規追加ボタンが押されました");
+    screenAddEdit.startNewEntry();
     currentScreen = 3; // TODO: 
   }
 
   void onClickEdit(Company c) {
-    println("編集: " + c.companyName);
+    screenAddEdit.startEdit(c);
     selectedCompany = c;
     currentScreen = 3; 
   }
