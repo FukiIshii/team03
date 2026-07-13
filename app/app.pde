@@ -1,6 +1,8 @@
 CompanyRepository repository;
 ScreenCompanyList screenList;
 ScreenAddEdit screenAddEdit;
+CalendarScreen calendarScreen;//小林追加
+NavigationBar navigationBar;//小林追加
 PFont jpFont;
 int currentScreen = 2;
 //サンプルコードです。好きなように編集してください！
@@ -27,6 +29,8 @@ void setup() {
   screenList = new ScreenCompanyList(repository);
   
   screenAddEdit = new ScreenAddEdit(repository);
+  calendarScreen = new CalendarScreen(repository);//小林追加
+  navigationBar = new NavigationBar();//小林追加
 }
 
 void keyPressed() {
@@ -37,8 +41,16 @@ void keyPressed() {
   }
 }
 
+//小林追加
 void mousePressed() {
-  if (currentScreen == 2) {
+  // 下部ナビゲーションがクリックされたときは、各画面には渡さない
+  if (navigationBar.handleInput()) {
+    return;
+  }
+
+  if (currentScreen == 1) {
+    calendarScreen.mousePressed();//小林追加
+  } else if (currentScreen == 2) {
     screenList.handleInput();
   }else if (currentScreen == 3) {
     screenAddEdit.handleInput();
@@ -46,9 +58,13 @@ void mousePressed() {
 }
 
 void draw() {
-  if (currentScreen == 2) {
+  if (currentScreen == 1) {
+    calendarScreen.display();//小林追加
+  } else if (currentScreen == 2) {
     screenList.display();
   } else if (currentScreen == 3) {
     screenAddEdit.display();
   }
+
+  navigationBar.display();
 }
