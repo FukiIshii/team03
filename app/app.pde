@@ -1,7 +1,3 @@
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-
 CompanyRepository repository;
 ScreenCompanyList screenList;
 ScreenAddEdit screenAddEdit;
@@ -9,9 +5,12 @@ CalendarScreen calendarScreen;//小林追加
 NavigationBar navigationBar;//小林追加
 PFont jpFont;
 int currentScreen = 2;
+// 追加: ToDo一覧画面と通知設定画面
+TodoListScreen todoListScreen;
+NotificationScreen notificationScreen;
 //サンプルコードです。好きなように編集してください！
 void setup() {
-  size(1400, 850);
+  size(1200, 800);
   jpFont = createFont("Meiryo", 32, true);
   textFont(jpFont);
   repository = new CompanyRepository();
@@ -31,10 +30,13 @@ void setup() {
   repository.add(c3);
 
   screenList = new ScreenCompanyList(repository);
-  
   screenAddEdit = new ScreenAddEdit(repository);
   calendarScreen = new CalendarScreen(repository);//小林追加
   navigationBar = new NavigationBar();//小林追加
+
+  // 追加: 企業データを使うToDo一覧と通知設定を初期化
+  todoListScreen = new TodoListScreen(repository);
+  notificationScreen = new NotificationScreen();
 }
 
 void keyPressed() {
@@ -56,18 +58,32 @@ void mousePressed() {
     calendarScreen.mousePressed();//小林追加
   } else if (currentScreen == 2) {
     screenList.handleInput();
-  }else if (currentScreen == 3) {
+  } else if (currentScreen == 3) {
     screenAddEdit.handleInput();
+  // 追加: ToDo一覧の操作
+  } else if (currentScreen == 0) {
+    todoListScreen.handleInput();
+  // 追加: 通知設定の操作
+  } else if (currentScreen == 4) {
+    notificationScreen.handleInput();
   }
 }
 
 void draw() {
+  background(255);
   if (currentScreen == 1) {
     calendarScreen.display();//小林追加
   } else if (currentScreen == 2) {
     screenList.display();
   } else if (currentScreen == 3) {
     screenAddEdit.display();
+  // 追加: ToDo一覧を表示
+  } else if (currentScreen == 0) {
+    todoListScreen.display();
+    notificationScreen.displayWarning(repository);
+  // 追加: 通知設定を表示
+  } else if (currentScreen == 4) {
+    notificationScreen.display();
   }
 
   navigationBar.display();

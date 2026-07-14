@@ -1,6 +1,7 @@
 // 全画面で共通に使う下部ナビゲーション
 class NavigationBar {
   float y = 740;
+  String[] labels = {"一覧確認", "カレンダー", "企業一覧", "追加・編集", "通知設定"};
 
   void display() {
     noStroke();
@@ -10,21 +11,21 @@ class NavigationBar {
     line(0, y, width, y);
     noStroke();
 
-    drawItem("一覧確認", 30, 120, 0);
-    drawItem("カレンダー", 180, 120, 1);
-    drawItem("企業一覧", 330, 150, 2);
-    drawItem("追加・編集", 510, 150, 3);
-    drawItem("通知設定", 690, 150, 4);
+    float slotW = width / (float) labels.length;
+    for (int i = 0; i < labels.length; i++) {
+      drawItem(labels[i], i * slotW, slotW, i);
+    }
   }
 
   void drawItem(String label, float x, float w, int screenId) {
     boolean active = currentScreen == screenId;
     fill(active ? color(80, 130, 210) : color(90));
     textSize(14);
-    text(label, x + 18, y + 35);
+    float tw = textWidth(label);
+    text(label, x + (w - tw) / 2, y + 35);
     if (active) {
       fill(80, 130, 210);
-      rect(x, y + 55, w, 3);
+      rect(x + w * 0.15, y + 55, w * 0.7, 3);
     }
   }
 
@@ -32,15 +33,17 @@ class NavigationBar {
   boolean handleInput() {
     if (mouseY < y || mouseY > y + 60) return false;
 
-    if (mouseX >= 180 && mouseX <= 300) {
-      currentScreen = 1;
-    } else if (mouseX >= 330 && mouseX <= 480) {
-      currentScreen = 2;
-    } else if (mouseX >= 510 && mouseX <= 660) {
+    float slotW = width / (float) labels.length;
+    int index = int(mouseX / slotW);
+    if (index < 0) index = 0;
+    if (index >= labels.length) index = labels.length - 1;
+
+    // 「追加・編集」タブに切り替えるときは常に新規入力状態にする
+    if (index == 3) {
       screenAddEdit.startNewEntry();
-      currentScreen = 3;
     }
-    // 一覧確認・通知設定は担当画面が統合されてから遷移を追加する
+    currentScreen = index;
+
     return true;
   }
 }
