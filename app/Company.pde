@@ -35,8 +35,22 @@ class Company{
   }
   
   boolean isDeadlineNear(int days) {
-    return false; // 仮実装。日付比較ロジックは後日調整
+  String[] allDates = { esDeadline, spiDeadline, internshipDate, interview1Date, interview2Date, interview3Date, photoDeadline };
+  DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+  LocalDate today = LocalDate.now();
+
+  for (String d : allDates) {
+    if (d == null || d.equals("")) continue;
+    try {
+      LocalDate deadline = LocalDate.parse(d, fmt);
+      long diff = ChronoUnit.DAYS.between(today, deadline);
+      if (diff >= 0 && diff <= days) return true;
+    } catch (Exception e) {
+      // 日付形式が不正なら無視
+    }
   }
+  return false;
+}
 
   String getNearestDeadline() {
     ArrayList<String> dates = new ArrayList<String>();

@@ -31,6 +31,32 @@ class CompanyRepository {
   }
 
   ArrayList<Company> sortByNearestDeadline() {
-    return companies; // 仮実装。後日Collections.sortで並べ替えを実装
+  ArrayList<Company> sorted = new ArrayList<Company>(companies);
+  int n = sorted.size();
+
+  for (int i = 0; i < n - 1; i++) {
+    for (int j = 0; j < n - 1 - i; j++) {
+      String da = sorted.get(j).getNearestDeadline();
+      String db = sorted.get(j + 1).getNearestDeadline();
+
+      boolean shouldSwap;
+      if (da.equals("ー") && db.equals("ー")) {
+        shouldSwap = false;
+      } else if (da.equals("ー")) {
+        shouldSwap = true;  // 締切なしは後ろへ
+      } else if (db.equals("ー")) {
+        shouldSwap = false;
+      } else {
+        shouldSwap = da.compareTo(db) > 0; // 日付が遅い方が前にあれば入れ替え
+      }
+
+      if (shouldSwap) {
+        Company temp = sorted.get(j);
+        sorted.set(j, sorted.get(j + 1));
+        sorted.set(j + 1, temp);
+      }
+    }
   }
+  return sorted;
+}
 }

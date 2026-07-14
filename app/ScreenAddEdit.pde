@@ -145,6 +145,16 @@ class ScreenAddEdit {
       errorMessage = "企業名を入力してください";
       return false;
     }
+    
+    InputField[] dateFields = { esDeadlineField, spiDeadlineField, internshipField,
+                               interview1Field, interview2Field, interview3Field, photoField };
+  for (InputField f : dateFields) {
+    if (!f.value.equals("") && !f.value.matches("\\d{4}/\\d{2}/\\d{2}")) {
+      errorMessage = f.label + "は「2026/07/09」のような形式(0埋め)で入力してください";
+      return false;
+    }
+  }
+    
     errorMessage = "";
     return true;
   }

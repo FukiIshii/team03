@@ -1,17 +1,11 @@
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-
 CompanyRepository repository;
 ScreenCompanyList screenList;
 ScreenAddEdit screenAddEdit;
-CalendarScreen calendarScreen;//小林追加
-NavigationBar navigationBar;//小林追加
 PFont jpFont;
 int currentScreen = 2;
 //サンプルコードです。好きなように編集してください！
 void setup() {
-  size(1400, 850);
+  size(1200, 800);
   jpFont = createFont("Meiryo", 32, true);
   textFont(jpFont);
   repository = new CompanyRepository();
@@ -33,8 +27,6 @@ void setup() {
   screenList = new ScreenCompanyList(repository);
   
   screenAddEdit = new ScreenAddEdit(repository);
-  calendarScreen = new CalendarScreen(repository);//小林追加
-  navigationBar = new NavigationBar();//小林追加
 }
 
 void keyPressed() {
@@ -45,16 +37,8 @@ void keyPressed() {
   }
 }
 
-//小林追加
 void mousePressed() {
-  // 下部ナビゲーションがクリックされたときは、各画面には渡さない
-  if (navigationBar.handleInput()) {
-    return;
-  }
-
-  if (currentScreen == 1) {
-    calendarScreen.mousePressed();//小林追加
-  } else if (currentScreen == 2) {
+  if (currentScreen == 2) {
     screenList.handleInput();
   }else if (currentScreen == 3) {
     screenAddEdit.handleInput();
@@ -62,13 +46,20 @@ void mousePressed() {
 }
 
 void draw() {
-  if (currentScreen == 1) {
-    calendarScreen.display();//小林追加
-  } else if (currentScreen == 2) {
+  if (currentScreen == 2) {
     screenList.display();
   } else if (currentScreen == 3) {
     screenAddEdit.display();
   }
+  drawBottomTabs();
+}
 
-  navigationBar.display();
+void drawBottomTabs() {
+  String[] tabs = {"一覧", "カレンダー", "企業一覧", "企業追加", "通知設定"};
+  float tabW = width / tabs.length;
+  for (int i = 0; i < tabs.length; i++) {
+    fill(currentScreen == i ? color(124, 140, 224) : color(150));
+    textSize(12);
+    text(tabs[i], i * tabW + tabW/2 - 20, height - 20);
+  }
 }
