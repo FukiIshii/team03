@@ -145,16 +145,6 @@ class ScreenAddEdit {
       errorMessage = "企業名を入力してください";
       return false;
     }
-    
-    InputField[] dateFields = { esDeadlineField, spiDeadlineField, internshipField,
-                               interview1Field, interview2Field, interview3Field, photoField };
-  for (InputField f : dateFields) {
-    if (!f.value.equals("") && !f.value.matches("\\d{4}/\\d{2}/\\d{2}")) {
-      errorMessage = f.label + "は「2026/07/09」のような形式(0埋め)で入力してください";
-      return false;
-    }
-  }
-    
     errorMessage = "";
     return true;
   }
@@ -174,6 +164,7 @@ class ScreenAddEdit {
       targetCompany.interview3Date = interview3Field.value;
       targetCompany.photoDeadline = photoField.value;
       targetCompany.selectionStatus = selectedStatus;
+      repository.update(targetCompany);
     } else {
       Company newCompany = new Company(companyNameField.value);
       newCompany.myPageUrl = urlField.value;
@@ -190,6 +181,11 @@ class ScreenAddEdit {
     }
 
     screenList.displayedCompanies = repository.getAll();
+
+    // 企業情報の追加・編集を保存したタイミングで、ToDoリストの内容も更新する
+    // （ToDoリストは起動時に一度しか読み込まれないため、ここで呼ばないと反映されない）
+    todoListScreen.loadTaskList();
+
     currentScreen = 2;
   }
 }

@@ -76,4 +76,41 @@ class Company{
   String toString() {
     return companyName + " / " + selectionStatus;
   }
+  JSONObject toJSON() {
+  JSONObject obj = new JSONObject();
+  obj.setString("companyName", companyName);
+  obj.setString("loginId", loginId);
+  obj.setString("password", password);
+  obj.setString("myPageUrl", myPageUrl);
+  obj.setString("email", email);
+  obj.setString("esDeadline", esDeadline);
+  obj.setBoolean("esStatus", esStatus);
+  obj.setString("spiDeadline", spiDeadline);
+  obj.setString("photoDeadline", photoDeadline);
+  obj.setString("internshipDate", internshipDate);
+  obj.setString("interview1Date", interview1Date);
+  obj.setString("interview2Date", interview2Date);
+  obj.setString("interview3Date", interview3Date);
+  obj.setString("selectionStatus", selectionStatus);
+  obj.setString("memo", memo);
+  return obj;
+}
+
+void loadFromJSON(JSONObject obj) {
+  companyName = obj.getString("companyName", "");
+  loginId = obj.getString("loginId", "");
+  password = obj.getString("password", "");
+  myPageUrl = obj.getString("myPageUrl", "");
+  email = obj.getString("email", "");
+  esDeadline = obj.getString("esDeadline", "");
+  esStatus = obj.getBoolean("esStatus", false);
+  spiDeadline = obj.getString("spiDeadline", "");
+  photoDeadline = obj.getString("photoDeadline", "");
+  internshipDate = obj.getString("internshipDate", "");
+  interview1Date = obj.getString("interview1Date", "");
+  interview2Date = obj.getString("interview2Date", "");
+  interview3Date = obj.getString("interview3Date", "");
+  selectionStatus = obj.getString("selectionStatus", "選考中");
+  memo = obj.getString("memo", "");
+}
 }
