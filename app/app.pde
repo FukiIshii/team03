@@ -1,10 +1,18 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.io.File;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+
 CompanyRepository repository;
 ScreenCompanyList screenList;
 ScreenAddEdit screenAddEdit;
 CalendarScreen calendarScreen;//小林追加
 NavigationBar navigationBar;//小林追加
 PFont jpFont;
-int currentScreen = 2;
+int currentScreen = 0;
 // 追加: ToDo一覧画面と通知設定画面
 TodoListScreen todoListScreen;
 NotificationScreen notificationScreen;
@@ -14,7 +22,9 @@ void setup() {
   jpFont = createFont("Meiryo", 32, true);
   textFont(jpFont);
   repository = new CompanyRepository();
+  repository.loadFromFile();
 
+  if (repository.getAll().size() == 0){
   Company c1 = new Company("〇〇株式会社");
   c1.esDeadline = "2026/07/15";
   c1.selectionStatus = "選考中";
@@ -28,6 +38,7 @@ void setup() {
   Company c3 = new Company("株式会社□□システムズ");
   c3.selectionStatus = "不合格";
   repository.add(c3);
+ }
 
   screenList = new ScreenCompanyList(repository);
   screenAddEdit = new ScreenAddEdit(repository);

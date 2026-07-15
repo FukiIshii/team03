@@ -164,6 +164,7 @@ class ScreenAddEdit {
       targetCompany.interview3Date = interview3Field.value;
       targetCompany.photoDeadline = photoField.value;
       targetCompany.selectionStatus = selectedStatus;
+      repository.update(targetCompany);
     } else {
       Company newCompany = new Company(companyNameField.value);
       newCompany.myPageUrl = urlField.value;
