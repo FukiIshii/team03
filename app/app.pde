@@ -13,6 +13,7 @@ CalendarScreen calendarScreen;//小林追加
 NavigationBar navigationBar;//小林追加
 PFont jpFont;
 int currentScreen = 0;
+boolean ctrlDown = false;
 // 追加: ToDo一覧画面と通知設定画面
 TodoListScreen todoListScreen;
 NotificationScreen notificationScreen;
@@ -51,11 +52,30 @@ void setup() {
 }
 
 void keyPressed() {
+  if (keyCode == CONTROL) {
+    ctrlDown = true;
+    return;
+  }
+
+  if (ctrlDown && keyCode == 86) { // Ctrl+V（Vのキーコード）
+    String pasted = getClipboardText();
+    if (currentScreen == 2) {
+      screenList.pasteToActiveField(pasted);
+    } else if (currentScreen == 3) {
+      screenAddEdit.pasteToActiveField(pasted);
+    }
+    return;
+  }
+
   if (currentScreen == 2) {
     screenList.handleKeyInput(key);
   } else if (currentScreen == 3) {
     screenAddEdit.handleKeyInput(key);
   }
+}
+
+void keyReleased() {
+  if (keyCode == CONTROL) ctrlDown = false;
 }
 
 //小林追加
@@ -78,6 +98,18 @@ void mousePressed() {
   } else if (currentScreen == 4) {
     notificationScreen.handleInput();
   }
+}
+
+String getClipboardText() {
+  try {
+    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+    if (clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor)) {
+      return (String) clipboard.getData(DataFlavor.stringFlavor);
+    }
+  } catch (Exception e) {
+    println("クリップボード取得エラー: " + e.getMessage());
+  }
+  return "";
 }
 
 void draw() {
