@@ -1,7 +1,7 @@
 // 全画面で共通に使う下部ナビゲーション
 class NavigationBar {
   float y = 740;
-  String[] labels = {"一覧確認", "カレンダー", "企業一覧", "追加・編集", "通知設定"};
+  String[] labels = {"To Do リスト", "カレンダー", "企業一覧", "追加・編集", "通知設定"};
 
   void display() {
     noStroke();

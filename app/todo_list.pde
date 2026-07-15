@@ -61,7 +61,7 @@ class TodoListScreen {
     rect(0, 0, width, 740);
     fill(15, 22, 33);
     textSize(31);
-    text("一覧 (ToDo)", 45, 65);
+    text("ToDo リスト", 45, 65);
     fill(60, 70, 84);
     textSize(16);
     text("期限が早い順に表示しています。", 45, 102);
