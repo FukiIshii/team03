@@ -242,8 +242,8 @@ class TodoListScreen {
 
     if (filtered.size() == 0) {
       fill(180);
-      textSize(13);
-      text("表示できるタスクがありません", x + 25, y + 130);
+      textSize(20);
+      text("表示できるタスクがありません", x + 25, y + 180);
     } else if (filtered.size() > maxVisibleRows) {
       drawScrollbar(x, y, w, filtered.size());
     }

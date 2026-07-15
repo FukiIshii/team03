@@ -4,7 +4,7 @@ ScreenAddEdit screenAddEdit;
 CalendarScreen calendarScreen;//小林追加
 NavigationBar navigationBar;//小林追加
 PFont jpFont;
-int currentScreen = 2;
+int currentScreen = 0;
 // 追加: ToDo一覧画面と通知設定画面
 TodoListScreen todoListScreen;
 NotificationScreen notificationScreen;
