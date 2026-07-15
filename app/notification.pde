@@ -1,4 +1,6 @@
-// 通知設定画面 + ToDo一覧上部に表示する締切間近の警告バナー
+// 通知設定画面
+// （ToDo一覧の締切警告は、通知タイミング設定を参照しつつ各行に直接表示する方式に変更したため、
+//   このクラスは設定値の保持と daysUntil() の提供のみを担う）
 class NotificationScreen {
   boolean notifyInApp = true;
 
@@ -163,41 +165,9 @@ class NotificationScreen {
     }
   }
 
-  // ToDo一覧画面の上部に、締切が近い項目があれば警告バナーを表示する
-  void displayWarning(CompanyRepository repository) {
-    if (!notifyInApp) return;
-    int threshold = timingDays[timingIndex];
-
-    ArrayList<String> warnings = new ArrayList<String>();
-    for (Company c : repository.getAll()) {
-      checkNear(c.companyName, "ES提出", c.esDeadline, threshold, warnings);
-      checkNear(c.companyName, "SPI受験", c.spiDeadline, threshold, warnings);
-      checkNear(c.companyName, "面接", c.interview1Date, threshold, warnings);
-    }
-    if (warnings.size() == 0) return;
-
-    noStroke();
-    fill(255, 235, 235);
-    stroke(230, 120, 120);
-    rect(35, 108, 1130, 26, 6);
-    noStroke();
-    fill(190, 60, 60);
-    textSize(12);
-    String msg = "⚠ " + warnings.size() + "件の締切が近づいています： " + warnings.get(0);
-    if (warnings.size() > 1) msg += " ほか";
-    text(msg, 50, 125);
-  }
-
-  void checkNear(String name, String label, String dateStr, int threshold, ArrayList<String> warnings) {
-    if (dateStr == null || dateStr.length() == 0) return;
-    int diff = daysUntil(dateStr);
-    if (diff >= 0 && diff <= threshold) {
-      warnings.add(name + "（" + label + "）");
-    }
-  }
-
   // "YYYY/MM/DD" 形式の日付が「今日」から何日後かを返す
   // 今日の日付は固定値ではなく、実行時に year()/month()/day() で毎回取得する
+  // ToDoリスト画面の行ごとの警告帯（期限切れ／期限間近）の判定にも利用される。
   int daysUntil(String dateStr) {
     String[] parts = dateStr.split("/");
     if (parts.length != 3) return 9999;
