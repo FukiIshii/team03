@@ -149,4 +149,10 @@ class ScreenCompanyList {
     if (status.equals("不合格")) return color(230, 140, 120);
     return color(140, 160, 230);
   }
+  
+  void pasteToActiveField(String text) {
+  if (!searchActive) return;
+  searchValue += text;
+  handleSearchInput();
+}
 }

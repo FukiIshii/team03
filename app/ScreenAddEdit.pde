@@ -149,6 +149,10 @@ class ScreenAddEdit {
     return true;
   }
 
+  void pasteToActiveField(String text) {
+  for (InputField f : allFields) f.pasteText(text);
+  }
+
   void save() {
     if (!validateInput()) return;
 

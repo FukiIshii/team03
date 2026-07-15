@@ -57,4 +57,8 @@ class InputField {
       value += k;
     }
   }
+  void pasteText(String text) {
+  if (!isActive) return;
+  value += text;
+}
 }
