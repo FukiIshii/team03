@@ -42,6 +42,10 @@ class NavigationBar {
     if (index == 3) {
       screenAddEdit.startNewEntry();
     }
+    // 「To Do リスト」タブに切り替えるときは、企業データの変更を確実に反映するため再読み込みする
+    if (index == 0) {
+      todoListScreen.loadTaskList();
+    }
     currentScreen = index;
 
     return true;

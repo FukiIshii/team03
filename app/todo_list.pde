@@ -25,17 +25,42 @@ class TodoListScreen {
 
   // CompanyRepository の全企業データを参照してToDoを生成する
   // Company に既にある companyName / esDeadline / interview1Date のみを参照する
+  //
+  // 企業の追加・編集後や、ToDoリスト画面に戻ってきたタイミングで再度呼び出すことを想定している。
+  // 呼び出すたびに TodoItem を作り直すため、再構築前に完了状態（done）を退避し、
+  // 再構築後に同じ企業・同じタスク内容のものへ復元することで、
+  // 「更新すると完了チェックが消える」という問題が起きないようにしている。
   void loadTaskList() {
+    // 企業オブジェクト（identityHashCode）とタスク内容の組をキーに、完了状態を退避する
+    HashMap<String, Boolean> doneStates = new HashMap<String, Boolean>();
+    for (TodoItem t : todos) {
+      doneStates.put(doneStateKey(t.company, t.task), t.done);
+    }
+
     todos.clear();
     for (Company c : repository.getAll()) {
       if (c.esDeadline.length() > 0) {
-        todos.add(new TodoItem(c, "ES提出", c.esDeadline, "提出期限を確認"));
+        todos.add(makeTodoItem(c, "ES提出", c.esDeadline, "提出期限を確認", doneStates));
       }
       if (c.interview1Date.length() > 0) {
-        todos.add(new TodoItem(c, "一次面接", c.interview1Date, "面接予定"));
+        todos.add(makeTodoItem(c, "一次面接", c.interview1Date, "面接予定", doneStates));
       }
     }
     sortByDeadline();
+  }
+
+  TodoItem makeTodoItem(Company c, String task, String deadline, String memo, HashMap<String, Boolean> doneStates) {
+    TodoItem item = new TodoItem(c, task, deadline, memo);
+    String key = doneStateKey(c, task);
+    if (doneStates.containsKey(key)) {
+      item.done = doneStates.get(key);
+    }
+    return item;
+  }
+
+  // Company は同一性で区別する（identityHashCode）。企業名の重複があっても混同しないようにするため。
+  String doneStateKey(Company c, String task) {
+    return System.identityHashCode(c) + "_" + task;
   }
 
   // 期限（yyyy/MM/dd）を昇順に並べ替える
@@ -134,9 +159,9 @@ class TodoListScreen {
     }
 
     if (shown == 0) {
-      fill(180);
-      textSize(13);
-      text("表示できるタスクがありません", x + 25, y + 130);
+      fill(150);
+      textSize(20);
+      text("表示できるタスクがありません", x + 25, y + 190);
     }
   }
 
