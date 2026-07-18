@@ -61,7 +61,7 @@ class CalendarScreen {
     }
 
     int firstWeekday = getFirstWeekday(displayYear, displayMonth);
-    int daysInMonth = getDaysInMonth(displayYear, displayMonth);
+    int daysInMonth = getDaysInMonth(displayMonth);
 
     for (int day = 1; day <= daysInMonth; day++) {
       int index = firstWeekday + day - 1;
@@ -127,7 +127,7 @@ class CalendarScreen {
     int cellW = 115;
     int cellH = 82;
     int firstWeekday = getFirstWeekday(displayYear, displayMonth);
-    int daysInMonth = getDaysInMonth(displayYear, displayMonth);
+    int daysInMonth = getDaysInMonth(displayMonth);
 
     for (int day = 1; day <= daysInMonth; day++) {
       int index = firstWeekday + day - 1;
@@ -144,7 +144,7 @@ class CalendarScreen {
     }
   }
 
-  int getDaysInMonth(int year, int month) {
+  int getDaysInMonth(int month) {
     int[] days = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     return days[month - 1];
   }
