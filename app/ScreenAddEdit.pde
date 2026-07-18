@@ -140,13 +140,46 @@ class ScreenAddEdit {
     for (InputField f : allFields) f.handleKey(k);
   }
 
-  boolean validateInput() {
+    boolean validateInput() {
     if (companyNameField.value.equals("")) {
       errorMessage = "企業名を入力してください";
       return false;
     }
+
+    InputField[] dateFields = {//追加
+      esDeadlineField,
+      spiDeadlineField,
+      internshipField,
+      interview1Field,
+      interview2Field,
+      interview3Field,
+      photoField
+    };
+
+    for (InputField f : dateFields) {
+      // 例：2026/3/9 と 2026/03/09 の両方を許可
+      if (!f.value.equals("") &&
+          !f.value.matches("\\d{4}/\\d{1,2}/\\d{1,2}")) {
+        errorMessage = f.label + "は「2026/3/9」の形式で入力してください";
+        return false;
+      }
+
+      // 保存前に 2026/03/09 形式へ統一する
+      if (!f.value.equals("")) {
+        f.value = normalizeDate(f.value);
+      }
+    }
+
     errorMessage = "";
     return true;
+  }
+  
+    String normalizeDate(String date) {//追加
+    String[] parts = date.split("/");
+
+    return parts[0] + "/"
+      + nf(int(parts[1]), 2) + "/"
+      + nf(int(parts[2]), 2);
   }
 
   void pasteToActiveField(String text) {
