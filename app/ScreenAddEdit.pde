@@ -156,20 +156,22 @@ class ScreenAddEdit {
       photoField
     };
 
-    for (InputField f : dateFields) {
-      // 例：2026/3/9 と 2026/03/09 の両方を許可
-      if (!f.value.equals("") &&
-          !f.value.matches("\\d{4}/\\d{1,2}/\\d{1,2}")) {
-        errorMessage = f.label + "は「2026/3/9」の形式で入力してください";
+        for (InputField f : dateFields) {
+      // 空欄は許可する
+      if (f.value.equals("")) {
+        continue;
+      }
+
+      // 形式・実在する日付かを確認する
+      if (!f.value.matches("\\d{4}/\\d{1,2}/\\d{1,2}") ||
+          !isValidDate(f.value)) {
+        errorMessage = f.label + "は正しい日付（例：2026/3/14）を入力してください";
         return false;
       }
 
-      // 保存前に 2026/03/09 形式へ統一する
-      if (!f.value.equals("")) {
-        f.value = normalizeDate(f.value);
-      }
+      // 保存時は 2026/03/14 形式に統一する
+      f.value = normalizeDate(f.value);
     }
-
     errorMessage = "";
     return true;
   }
@@ -181,6 +183,29 @@ class ScreenAddEdit {
       + nf(int(parts[1]), 2) + "/"
       + nf(int(parts[2]), 2);
   }
+  
+    boolean isValidDate(String date) {//カレンダー正常値入力のため追加
+    String[] parts = date.split("/");
+
+    int year = int(parts[0]);
+    int month = int(parts[1]);
+    int day = int(parts[2]);
+
+    if (month < 1 || month > 12) {
+      return false;
+    }
+
+    int[] daysInMonth = {31, 28, 31, 30, 31, 30,
+                         31, 31, 30, 31, 30, 31};
+
+    // うるう年の2月だけ29日まで許可する
+    if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+      daysInMonth[1] = 29;
+    }
+
+    return day >= 1 && day <= daysInMonth[month - 1];
+  }
+  
 
   void pasteToActiveField(String text) {
   for (InputField f : allFields) f.pasteText(text);
