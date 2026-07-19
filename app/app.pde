@@ -1,6 +1,10 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;//追加
+import java.time.temporal.ChronoUnit;
+import java.io.File;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
 
 CompanyRepository repository;
 ScreenCompanyList screenList;
@@ -9,6 +13,7 @@ CalendarScreen calendarScreen;//小林追加
 NavigationBar navigationBar;//小林追加
 PFont jpFont;
 int currentScreen = 0;
+boolean ctrlDown = false;
 // 追加: ToDo一覧画面と通知設定画面
 TodoListScreen todoListScreen;
 NotificationScreen notificationScreen;
@@ -18,20 +23,23 @@ void setup() {
   jpFont = createFont("Meiryo", 32, true);
   textFont(jpFont);
   repository = new CompanyRepository();
+  repository.loadFromFile();
 
-  Company c1 = new Company("〇〇株式会社");
-  c1.esDeadline = "2026/07/15";
-  c1.selectionStatus = "選考中";
-  repository.add(c1);
+  if (repository.getAll().size() == 0) {
+    Company c1 = new Company("〇〇株式会社");
+    c1.esDeadline = "2026/07/15";
+    c1.selectionStatus = "選考中";
+    repository.add(c1);
 
-  Company c2 = new Company("△△商事株式会社");
-  c2.interview1Date = "2026/07/20";
-  c2.selectionStatus = "合格";
-  repository.add(c2);
+    Company c2 = new Company("△△商事株式会社");
+    c2.interview1Date = "2026/07/20";
+    c2.selectionStatus = "合格";
+    repository.add(c2);
 
-  Company c3 = new Company("株式会社□□システムズ");
-  c3.selectionStatus = "不合格";
-  repository.add(c3);
+    Company c3 = new Company("株式会社□□システムズ");
+    c3.selectionStatus = "不合格";
+    repository.add(c3);
+  }
 
   screenList = new ScreenCompanyList(repository);
   screenAddEdit = new ScreenAddEdit(repository);
@@ -43,12 +51,43 @@ void setup() {
   notificationScreen = new NotificationScreen();
 }
 
+String getClipboardText() {
+  try {
+    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+    if (clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor)) {
+      return (String) clipboard.getData(DataFlavor.stringFlavor);
+    }
+  } catch (Exception e) {
+    println("クリップボード取得エラー: " + e.getMessage());
+  }
+  return "";
+}
+
 void keyPressed() {
+  if (keyCode == CONTROL) {
+    ctrlDown = true;
+    return;
+  }
+
+  if (ctrlDown && keyCode == 86) { // Ctrl+V
+    String pasted = getClipboardText();
+    if (currentScreen == 2) {
+      screenList.pasteToActiveField(pasted);
+    } else if (currentScreen == 3) {
+      screenAddEdit.pasteToActiveField(pasted);
+    }
+    return;
+  }
+
   if (currentScreen == 2) {
     screenList.handleKeyInput(key);
   } else if (currentScreen == 3) {
     screenAddEdit.handleKeyInput(key);
   }
+}
+
+void keyReleased() {
+  if (keyCode == CONTROL) ctrlDown = false;
 }
 
 //小林追加
