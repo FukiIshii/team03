@@ -389,7 +389,7 @@ class TodoListScreen {
 
       // 行のそれ以外の場所をクリックしたら、その企業の編集画面へ移動する
       if (mouseX >= x && mouseX <= x + w && mouseY >= rowY - 20 && mouseY <= rowY + 50) {
-        screenAddEdit.startEdit(task.company);
+        screenAddEdit.startEdit(task.company, 0);//画面移動のため変更（篠崎）
         currentScreen = 3;
         return;
       }

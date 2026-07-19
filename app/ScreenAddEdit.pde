@@ -1,9 +1,11 @@
 class ScreenAddEdit {
+
   CompanyRepository repository;
   Company targetCompany;
   boolean isEditMode = false;
   String selectedStatus = "選考中";
   String errorMessage = "";
+  int returnScreen = 2;
 
   InputField companyNameField, urlField, idField;
   InputField esDeadlineField, spiDeadlineField, internshipField;
@@ -49,6 +51,7 @@ class ScreenAddEdit {
     isEditMode = false;
     selectedStatus = "選考中";
     errorMessage = "";
+    returnScreen = 2;
     for (InputField f : allFields) { f.value = ""; f.isActive = false; }
   }
 
@@ -57,6 +60,7 @@ class ScreenAddEdit {
     isEditMode = true;
     selectedStatus = c.selectionStatus;
     errorMessage = "";
+    returnScreen = 2;
 
     companyNameField.value = c.companyName;
     urlField.value = c.myPageUrl;
@@ -68,6 +72,11 @@ class ScreenAddEdit {
     interview2Field.value = c.interview2Date;
     interview3Field.value = c.interview3Date;
     photoField.value = c.photoDeadline;
+  }
+
+  void startEdit(Company c, int fromScreen) {
+    startEdit(c);
+    returnScreen = fromScreen;
   }
 
   void display() {
@@ -129,7 +138,7 @@ class ScreenAddEdit {
     if (isInside(mouseX, mouseY, pill3X, pillY, pillW, pillH)) selectedStatus = "不合格";
 
     if (isInside(mouseX, mouseY, saveBtnX, saveBtnY, saveBtnW, saveBtnH)) save();
-    if (isInside(mouseX, mouseY, backBtnX, backBtnY, backBtnW, backBtnH)) currentScreen = 2;
+    if (isInside(mouseX, mouseY, backBtnX, backBtnY, backBtnW, backBtnH)) currentScreen = returnScreen;
   }
 
   boolean isInside(float px, float py, float x, float y, float w, float h) {
@@ -248,6 +257,6 @@ class ScreenAddEdit {
     // （ToDoリストは起動時に一度しか読み込まれないため、ここで呼ばないと反映されない）
     todoListScreen.loadTaskList();
 
-    currentScreen = 2;
+    currentScreen = returnScreen;
   }
 }
